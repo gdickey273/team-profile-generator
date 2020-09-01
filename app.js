@@ -203,6 +203,58 @@ const createEmployee = async () => {
     employeeArray.push(intern);
   }
 
+  const createEngineer = async () => {
+    let github;
+
+    const promptGithub = async () => {
+
+      let isValidGithub;
+
+      await inquirer.prompt([
+        {
+          name: "github",
+          type: "input",
+          message: `Please enter ${name}'s github account.`
+        },
+      ]).then((answers) => {
+        if (!/[^a-z0-9-]/.test(answers.github.trim().toLowerCase())) {
+          if(/--/.test(answers.github)){
+            isValidGithub = false;
+          } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length-1] === "-"){
+            isValidGithub = false;
+          } else {
+          isValidGithub = true;
+          github = answers.github.trim();
+          }
+        } else isValidGithub = false;
+      });
+
+
+      while (!isValidGithub) {
+        await inquirer.prompt([{
+          message: "Invalid github username. Usernames can only contain alphanumeric characters and single hyphens and cannot begin or end in a hyphen.",
+          type: "input",
+          name: "github"
+        }]).then((answers) => {
+          if (!/[^a-z0-9-]/.test(answers.github.trim().toLowerCase())) {
+            if(/--/.test(answers.github)){
+              isValidGithub = false;
+            } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length-1] === "-"){
+              isValidGithub = false;
+            } else {
+            isValidGithub = true;
+            github = answers.github.trim();
+            }
+          } else isValidGithub = false;
+        });
+      }
+
+    }
+
+    await promptGithub();
+    let engineer = new Engineer(name, email, github);
+    employeeArray.push(engineer);
+  }
   await promptName();
   console.log(name);
   await promptEmail();
