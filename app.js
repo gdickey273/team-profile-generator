@@ -13,7 +13,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 
-const employeeArray = ["Poopybutts"];
+const employeeArray = [];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -24,8 +24,8 @@ const createEmployee = async () => {
   let email;
   let role;
 
-  
-  
+
+
 
   const promptName = async () => {
 
@@ -113,7 +113,7 @@ const createEmployee = async () => {
         name: "role",
         type: "list",
         message: "Please select employee role.",
-        choices: [{ name: "Manager", value: "manager" }, { name: "Engineer", value: "engineer" }, { name: "Intern", value: "intern" }]
+        choices: [{ name: "Manager", value: "Manager" }, { name: "Engineer", value: "Engineer" }, { name: "Intern", value: "Intern" }]
       },
     ]).then((answers) => {
       role = answers.role;
@@ -218,13 +218,13 @@ const createEmployee = async () => {
         },
       ]).then((answers) => {
         if (!/[^a-z0-9-]/.test(answers.github.trim().toLowerCase())) {
-          if(/--/.test(answers.github)){
+          if (/--/.test(answers.github)) {
             isValidGithub = false;
-          } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length-1] === "-"){
+          } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length - 1] === "-") {
             isValidGithub = false;
           } else {
-          isValidGithub = true;
-          github = answers.github.trim();
+            isValidGithub = true;
+            github = answers.github.trim();
           }
         } else isValidGithub = false;
       });
@@ -237,13 +237,13 @@ const createEmployee = async () => {
           name: "github"
         }]).then((answers) => {
           if (!/[^a-z0-9-]/.test(answers.github.trim().toLowerCase())) {
-            if(/--/.test(answers.github)){
+            if (/--/.test(answers.github)) {
               isValidGithub = false;
-            } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length-1] === "-"){
+            } else if (answers.github.trim()[0] === "-" || answers.github.trim()[answers.github.trim().length - 1] === "-") {
               isValidGithub = false;
             } else {
-            isValidGithub = true;
-            github = answers.github.trim();
+              isValidGithub = true;
+              github = answers.github.trim();
             }
           } else isValidGithub = false;
         });
@@ -263,13 +263,13 @@ const createEmployee = async () => {
   console.log(role);
 
   switch (role) {
-    case "manager":
+    case "Manager":
       await createManager();
       break;
-    case "intern":
+    case "Intern":
       await createIntern();
       break;
-    case "engineer":
+    case "Engineer":
       await createEngineer();
       break;
   };
@@ -284,12 +284,23 @@ const fillEmployeeArray = async () => {
 
   while (areMoreEmployees) {
     await createEmployee();
+    await inquirer.prompt([
+      { type: "confirm", name: "areMoreEmployees", message: "Would you like to add another employee?" }]).then(answers => {
+        areMoreEmployees = answers.areMoreEmployees;
+      });
     console.log(employeeArray);
-    areMoreEmployees = false;
   }
 }
 
-fillEmployeeArray();
+const renderHTML = async () => {
+  await fillEmployeeArray();
+  
+  const html = render(employeeArray);
+  fs.writeFileSync("./output/team.html", html, "utf-8");
+
+}
+
+renderHTML();
 
 
 
