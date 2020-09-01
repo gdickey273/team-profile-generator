@@ -24,8 +24,8 @@ const createEmployee = async () => {
   let email;
   let role;
 
-  let github;
-  let school;
+  
+  
 
   const promptName = async () => {
 
@@ -124,7 +124,7 @@ const createEmployee = async () => {
   const createManager = async () => {
     let officeNumber;
 
-    const promptManagerInfo = async () => {
+    const promptOfficeNumber = async () => {
 
       let isValidOfficeNumber;
 
@@ -157,9 +157,50 @@ const createEmployee = async () => {
 
     }
 
-    await promptManagerInfo();
+    await promptOfficeNumber();
     let manager = new Manager(name, email, officeNumber);
     employeeArray.push(manager);
+  }
+
+  const createIntern = async () => {
+    let school;
+
+    const promptSchoolName = async () => {
+
+      let isValidSchool;
+
+      await inquirer.prompt([
+        {
+          name: "school",
+          type: "input",
+          message: `Please enter the name of ${name}'s school.`
+        },
+      ]).then((answers) => {
+        if (!/[^a-z\s]/.test(answers.school.toLowerCase())) {
+          isValidSchool = true;
+          school = answers.school;
+        } else isValidSchool = false;
+      });
+
+
+      while (!isValidSchool) {
+        await inquirer.prompt([{
+          message: "Invalid school name. Please use only letters A-Z",
+          type: "input",
+          name: "school"
+        }]).then(answers => {
+          if (!/[^a-z\s]/.test(answers.school.toLowerCase())) {
+            isValidSchool = true;
+            school = answers.school;
+          }
+        });
+      }
+
+    }
+
+    await promptSchoolName();
+    let intern = new Intern(name, email, school);
+    employeeArray.push(intern);
   }
 
   await promptName();
