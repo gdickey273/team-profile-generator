@@ -11,17 +11,22 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
 
+const employeeArray = ["Poopybutts"];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 console.log("Welcome to the app!")
-const promptEmployeeInfo = async () => {
+const createEmployee = async () => {
 
   let name;
   let email;
   let role;
-  
+
+  let github;
+  let school;
+
   const promptName = async () => {
 
     let isValidName;
@@ -33,7 +38,7 @@ const promptEmployeeInfo = async () => {
         message: "Please enter employee name."
       },
     ]).then((answers) => {
-      if (!/[^abcdefghijklmnopqrstuvwxyz-\s]/.test(answers.name.toLowerCase())) {
+      if (!/[^a-z-\s]/.test(answers.name.toLowerCase())) {
         isValidName = true;
         name = answers.name;
       } else isValidName = false;
@@ -46,7 +51,7 @@ const promptEmployeeInfo = async () => {
         type: "input",
         name: "name"
       }]).then(answers => {
-        if (!/[^abcdefghijklmnopqrstuvwxyz-\s]/.test(answers.name.toLowerCase())) {
+        if (!/[^a-z-\s]/.test(answers.name.toLowerCase())) {
           isValidName = true;
           name = answers.name;
         }
@@ -66,13 +71,13 @@ const promptEmployeeInfo = async () => {
         message: "Please enter employee email."
       },
     ]).then((answers) => {
-      if(answers.email.split("@").length !== 2){
+      if (answers.email.split("@").length !== 2) {
         isValidEmail = false;
-      } else if(answers.email.trim().split(" ").length > 1){
+      } else if (answers.email.trim().split(" ").length > 1) {
         isValidEmail = false;
-      } else if(answers.email.split("@")[0].split(".").length > 0 || answers.email.split("@")[1].split(".").length < 1){
+      } else if (answers.email.split("@")[0].split(".").length > 1 || answers.email.split("@")[1].split(".").length < 2) {
         isValidEmail = false;
-      } else{
+      } else {
         isValidEmail = true;
         email = answers.email;
       }
@@ -85,22 +90,21 @@ const promptEmployeeInfo = async () => {
         type: "input",
         name: "email"
       }]).then((answers) => {
-        if(answers.email.split("@").length !== 2){
+        if (answers.email.split("@").length !== 2) {
           isValidEmail = false;
-        } else if(answers.email.trim().split(" ").length > 1){
+        } else if (answers.email.trim().split(" ").length > 1) {
           isValidEmail = false;
-        } else if(answers.email.split("@")[0].split(".").length > 1 || answers.email.split("@")[1].split(".").length < 2){
+        } else if (answers.email.split("@")[0].split(".").length > 1 || answers.email.split("@")[1].split(".").length < 2) {
           isValidEmail = false;
-        } else{
+        } else {
           isValidEmail = true;
           email = answers.email;
         }
       });
-  
+
     }
 
   }
-
 
   const promptRole = async () => {
 
@@ -117,43 +121,84 @@ const promptEmployeeInfo = async () => {
 
   }
 
+  const createManager = async () => {
+    let officeNumber;
+
+    const promptManagerInfo = async () => {
+
+      let isValidOfficeNumber;
+
+      await inquirer.prompt([
+        {
+          name: "officeNumber",
+          type: "input",
+          message: `Please enter ${name}'s office number.`
+        },
+      ]).then((answers) => {
+        if (!/[^a-z0-9.-\s]/.test(answers.officeNumber.toLowerCase())) {
+          isValidOfficeNumber = true;
+          officeNumber = answers.officeNumber;
+        } else isValidOfficeNumber = false;
+      });
+
+
+      while (!isValidOfficeNumber) {
+        await inquirer.prompt([{
+          message: "Invalid Office Number. Please use only letters A-Z, numbers 0-9, and '-' or '.' characters.",
+          type: "input",
+          name: "officeNumber"
+        }]).then(answers => {
+          if (!/[^a-z0-9.-\s]/.test(answers.officeNumber.toLowerCase())) {
+            isValidOfficeNumber = true;
+            officeNumber = answers.officeNumber;
+          }
+        });
+      }
+
+    }
+
+    await promptManagerInfo();
+    let manager = new Manager(name, email, officeNumber);
+    employeeArray.push(manager);
+  }
 
   await promptName();
   console.log(name);
-
   await promptEmail();
   console.log(email);
+  await promptRole();
+  console.log(role);
+
+  switch (role) {
+    case "manager":
+      await createManager();
+      break;
+    case "intern":
+      await createIntern();
+      break;
+    case "engineer":
+      await createEngineer();
+      break;
+  };
 
 
-  const promptManagerInfo = () => {
-    let name;
-    let email;
-    let officeNumber;
 
 
-  }
 
-
+}
+const fillEmployeeArray = async () => {
   let areMoreEmployees = true;
+
   while (areMoreEmployees) {
-    await promptRole();
-    console.log(role);
-    switch (role) {
-      case "manager":
-        promptManagerInfo();
-        break;
-      case "intern":
-        promptInterInfo();
-        break;
-      case "engineer":
-        promptEngineerInfo();
-        break;
-    };
-    console.log("After switch!");
+    await createEmployee();
+    console.log(employeeArray);
     areMoreEmployees = false;
-    //areMoreEmployees = promptMoreEmployees();
   }
 }
+
+fillEmployeeArray();
+
+
 
 
 // After the user has input all employees desired, call the `render` function (required
@@ -176,4 +221,4 @@ const promptEmployeeInfo = async () => {
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
 
-promptEmployeeInfo();
+
