@@ -22,18 +22,15 @@
   Once all information is added and the user chooses not to add any more employees, an html file will be created detailing the giveb team information.
 
   ### Link to Usage Video   
- 
+ https://drive.google.com/file/d/11ezHugUtyYBRgbNWtUv7uz48u6bi0oen/view  
 
-  ### Usage Gifs
-  ![usage gif 1](/images/usage-gif-1.gif)  
-  ![usage gif 2](/images/usage-gif-2.gif)  
 
   ### Usage Screenshots  
   User answering command line prompts  
-  ![Command Line Screenshot](/images/usage-screenshot-command-line.png)
+  ![Command Line Screenshot](/images/team-profile-cli.png)
 
-  A generated README.md file  
-  ![README file Screenshot](/images/usage-screenshot-readme-file.png)
+  A Generated HTML Profile  
+  ![Generated HTML Profile Screenshot](/images/team-profile.png)
 
   
 
