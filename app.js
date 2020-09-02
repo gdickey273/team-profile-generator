@@ -18,7 +18,7 @@ const employeeArray = [];
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
-console.log("Welcome to the app!")
+console.log("Hello! Please enter your manager information first and then you'll be able to add information on your employees.")
 // const createEmployee = async () => {
 
 //   let name;
